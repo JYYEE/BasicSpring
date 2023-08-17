@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Main">
+	<!-- 편의를 위해서 *를 썼지만 모든 컬럼명 쓰는 것을 권장. 아래코드가 제대로된 코드. 이걸 이용. -->
+	<select id="selectBoardList" resultType="boardVO">
+		<![CDATA[
+			select b.*
+			from (
+			    select a.*, row_number() over (order by a.bono desc) rnum
+			    from (
+			        select
+			            bono, botitle, bocontent, bowriter, bodate, bohit
+			        from board
+			        where 1=1
+			        order by bono desc
+			    ) a
+			) b
+			where rnum <= 5
+		]]>
+	</select>
+	<!-- 잘못된 코드 최신글부터 불러오기 불가능 
+	select * from board
+	where rownum <= 5
+	order by bono desc -->
+	<select id="selectNoticeList" resultType="noticeVO">
+		<![CDATA[
+			select b.*
+			from (
+			    select a.*, row_number() over (order by a.bono desc) rnum
+			    from (
+			        select
+			            bono, botitle, bocontent, bowriter, bodate, bohit
+			        from notice
+			        where 1=1
+			        order by bono desc
+			    ) a
+			) b
+			where rnum <= 5
+		]]>
+	</select>	
+	<select id="selectFreeList" resultType="freeVO">
+		<![CDATA[
+			select b.*
+			from (
+			    select a.*, row_number() over (order by a.bono desc) rnum
+			    from (
+			        select
+			            bono, botitle, bocontent, bowriter, bodate, bohit
+			        from free
+			        where 1=1
+			        order by bono desc
+			    ) a
+			) b
+			where rnum <= 5
+		]]>
+	</select>
+	<select id="selectBoardCount" resultType="int"> 
+		select count(*) from board
+	</select>
+	<select id="selectNoticeCount" resultType="int"> 
+		select count(*) from notice
+	</select>
+	<select id="selectFreeCount" resultType="int"> 
+		select count(*) from free
+	</select>
+</mapper>
